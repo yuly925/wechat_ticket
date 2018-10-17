@@ -19,7 +19,7 @@ function checktime(){
     var bookstart = new Date($('#input-book-start-year').val(), $('#input-book-start-month').val()-1, $('#input-book-start-day').val(), $('#input-book-start-hour').val(), $('#input-book-start-minute').val());
     var bookend = new Date($('#input-book-end-year').val(), $('#input-book-end-month').val()-1, $('#input-book-end-day').val(), $('#input-book-end-hour').val(), $('#input-book-end-minute').val());
     var now = new Date();
-    if(locals.activity.status == 0){
+    if(locals.activity.status == 0 || locals.activity.status == 1){
         if(bookstart <= now){
             $('#input-book-start-year').popover({
                     html: true,
@@ -33,7 +33,7 @@ function checktime(){
             return false;
         }
     }
-    
+
     if(bookend <= bookstart){
         $('#input-book-end-year').popover({
             html: true,

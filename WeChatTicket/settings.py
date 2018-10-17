@@ -19,7 +19,7 @@ import urllib.parse
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Configurations load from file
-CONFIGS = json.loads(open(os.path.join(BASE_DIR, 'configs.json')).read())
+CONFIGS = json.loads(open(os.path.join(BASE_DIR, 'configs.test.json')).read())
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.9/howto/deployment/checklist/
@@ -38,7 +38,7 @@ WECHAT_TOKEN = CONFIGS['WECHAT_TOKEN']
 WECHAT_APPID = CONFIGS['WECHAT_APPID']
 WECHAT_SECRET = CONFIGS['WECHAT_SECRET']
 
-ALLOWED_HOSTS = ['2e2343x841.imwork.net']
+ALLOWED_HOSTS = [CONFIGS['SITE_DOMAIN']]
 
 
 # Application definition
@@ -155,6 +155,9 @@ STATIC_URL = '/'
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
+IMAGE_ROOT=os.path.join(BASE_DIR,'static/media/images/')
+
+IMAGE_URL='/media/images/'
 
 # Site and URL
 SITE_DOMAIN = CONFIGS['SITE_DOMAIN'].rstrip('/')
