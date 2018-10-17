@@ -6,8 +6,8 @@
   "WECHAT_APPID": "wxb532d714aca4da11",
   "WECHAT_SECRET": "be89aeb944f848d90a04abca4e6ac9d9",
   "DB_NAME": "wechat_ticket",
-  "DB_USER": "NOIR",
-  "DB_PASS": "l14240119981031",
+  "DB_USER": "root",
+  "DB_PASS": "",
   "DB_HOST": "127.0.0.1",
   "DB_PORT": "3306",
   "SITE_DOMAIN": "2e2343x841.imwork.net"
