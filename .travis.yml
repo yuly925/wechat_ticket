@@ -4,14 +4,16 @@ python:
 services:
   - mysql
 env:
-  - DJANGO_VERSION = 1.9.5
+  - DJANGO_VERSION = 1.9.5, DB = mysql
 before_install:
-  -mysql -e 'CREATE DATABASE IF NOT EXISTS wechat_ticket;'
-  -mv configs.test.json configs.json
+  - mysql -e 'CREATE DATABASE IF NOT EXISTS wechat_ticket;'
+  - mv configs.test.json configs.json
 install:
   - pip install -r requirements.txt
 
+before_script:
+  - python manage.py makemigrations
+  - python manage.py migrate
 script: 
-  #- make test
   - python manage.py test
   #true
