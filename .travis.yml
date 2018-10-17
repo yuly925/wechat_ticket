@@ -5,11 +5,13 @@ services:
   - mysql
 env:
   - DJANGO_VERSION = 1.9.5
-#before_install:
-  #Create mysql databases and tables
+before_install:
+  -mysql -e 'CREATE DATABASE IF NOT EXISTS wechat_ticket;'
+  -mv configs.test.json configs.json
 install:
   - pip install -r requirements.txt
+
 script: 
   #- make test
-  #- python manage.py test
-  true
+  - python manage.py test
+  #true
