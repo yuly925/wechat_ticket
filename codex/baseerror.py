@@ -33,3 +33,8 @@ class ValidateError(BaseError):
 
     def __init__(self, msg):
         super(ValidateError, self).__init__(3, msg)
+
+class FileError(BaseError):
+
+    def __init__(self, msg):
+        super(ValidateError, self).__init__(4, msg)
