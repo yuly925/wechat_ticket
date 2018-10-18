@@ -167,8 +167,7 @@ SITE_DOMAIN = CONFIGS['SITE_DOMAIN'].rstrip('/')
 def get_url(path, params=None):
     full_path = urllib.parse.urljoin(SITE_DOMAIN, path)
     if params:
-        full_path=full_path + ('&' if urllib.parse.urlparse(full_path).query else '?') + urllib.parse.urlencode(params)
-        return full_path
+        return full_path + ('&' if urllib.parse.urlparse(full_path).query else '?') + urllib.parse.urlencode(params)
     else:
         return full_path
 
