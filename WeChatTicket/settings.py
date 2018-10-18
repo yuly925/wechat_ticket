@@ -38,7 +38,7 @@ WECHAT_TOKEN = CONFIGS['WECHAT_TOKEN']
 WECHAT_APPID = CONFIGS['WECHAT_APPID']
 WECHAT_SECRET = CONFIGS['WECHAT_SECRET']
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['998868c4.ngrok.io','yulinyingdemacbook-pro.local']
 
 
 # Application definition
@@ -155,6 +155,10 @@ STATIC_URL = '/'
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
+IMAGE_ROOT=os.path.join(BASE_DIR,'static/media/images/')
+
+IMAGE_URL='/media/images/'
+
 
 # Site and URL
 SITE_DOMAIN = CONFIGS['SITE_DOMAIN'].rstrip('/')
@@ -163,7 +167,8 @@ SITE_DOMAIN = CONFIGS['SITE_DOMAIN'].rstrip('/')
 def get_url(path, params=None):
     full_path = urllib.parse.urljoin(SITE_DOMAIN, path)
     if params:
-        return full_path + ('&' if urllib.parse.urlparse(full_path).query else '?') + urllib.parse.urlencode(params)
+        full_path=full_path + ('&' if urllib.parse.urlparse(full_path).query else '?') + urllib.parse.urlencode(params)
+        return full_path
     else:
         return full_path
 
