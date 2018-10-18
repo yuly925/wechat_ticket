@@ -66,8 +66,5 @@ target/
 
 # Custom files
 /configs.json
-<<<<<<< HEAD
-=======
 
->>>>>>> 20209440a1a9f499ec2cef3deaadaf27ec2006be
 *.DS_Store
