@@ -39,7 +39,7 @@ WECHAT_APPID = CONFIGS['WECHAT_APPID']
 WECHAT_SECRET = CONFIGS['WECHAT_SECRET']
 
 
-ALLOWED_HOSTS = ['998868c4.ngrok.io','yulinyingdemacbook-pro.local']
+ALLOWED_HOSTS = ['7c53390c.ngrok.io','yulinyingdemacbook-pro.local']
 
 # Application definition
 

@@ -230,8 +230,6 @@ class WeChatView(BaseView):
 
     def handle_wechat_msg(self):
         msg = self.parse_msg_xml(ET.fromstring(self.request.body))
-        print(self.request)
-        print(self.request.body)
         if 'FromUserName' not in msg:
             return self.error_message_handler(self, msg, None).handle()
         user, created = User.objects.get_or_create(open_id=msg['FromUserName'])

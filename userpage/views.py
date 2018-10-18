@@ -30,6 +30,7 @@ class UserBind(APIView):
         self.validate_user()
         user.student_id = self.input['student_id']
         user.save()
+
         #return 0
 
 class activityDetail(APIView):

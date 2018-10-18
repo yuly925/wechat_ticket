@@ -77,6 +77,7 @@ class Activitydelete(APIView):
 
 class Createactivity(APIView):
     def post(self):
+        print(self.request.body)
         self.check_input('name', 'key','place','description','picUrl','startTime','endTime','bookStart','bookEnd','totalTickets','status')
         if self.request.user.is_authenticated():
             data=Activity(name=self.input['name'],
