@@ -32,7 +32,7 @@ class Login(APIView):
             raise ValidateError('用户名为空！')
         if not password:
             raise ValidateError('密码为空！')
-        if not User.objects.get(username=username):
+        if not User.objects.filter(username=username):
             raise ValidateError('用户名不存在！')
         if not user:
             raise ValidateError('密码错误！')
@@ -79,8 +79,10 @@ class ActivityDelete(APIView):
             raise ValidateError('用户未登录！')
         self.check_input('id')
         id=self.input['id']
-        activity=Activity.objects.get(id=id)
-        if not activity:
+
+        try:
+            activity=Activity.objects.get(id=id)
+        except:
             raise LogicError('删除不存在的活动!')
         if activity.status==-1:
             raise LogicError('删除已删除的活动!')
@@ -119,7 +121,7 @@ class CreateActivity(APIView):
         if not self.request.user.is_authenticated():
             raise ValidateError('用户未登录！')
         self.check_input('name', 'key','place','description','picUrl','startTime','endTime','bookStart','bookEnd','totalTickets','status')
-        if not(self.input['status']==0 or self.input['status']==1):
+        if not(int(self.input['status'])==0 or int(self.input['status'])==1):
             raise LogicError('活动状态错误！')
 
         currentTime=datetime.now().strftime("%Y-%m-%dT%H:%M:%S.000Z")
@@ -180,8 +182,9 @@ class ActivityDetail(APIView):
         if not self.request.user.is_authenticated():
             raise ValidateError("用户未登录!")
         self.check_input('id')
-        activity=Activity.objects.get(id=self.input['id'])
-        if not activity:
+        try:
+            activity=Activity.objects.get(id=self.input['id'])
+        except:
             raise LogicError('活动不存在！')
         if activity.status==-1:
             raise LogicError('该活动已删除！')
@@ -285,8 +288,9 @@ class ActivityMenu(APIView):
             raise ValidateError("用户未登录!")
         data=[]
         for id in self.input:
-            activity=Activity.objects.get(id=id)
-            if not activity:
+            try:
+                activity=Activity.objects.get(id=id)
+            except:
                 raise LogicError('没有此项活动！')
             bookStart=int(time.mktime(activity.book_start.astimezone(pytz.timezone('Asia/Shanghai')).timetuple()))
             bookEnd=int(time.mktime(activity.book_end.astimezone(pytz.timezone('Asia/Shanghai')).timetuple()))
@@ -301,8 +305,9 @@ class ActivityCheckin(APIView):
         if not self.request.user.is_authenticated():
             raise ValidateError("用户未登录!")
         self.check_input('actId')
-        activity=Activity.objects.get(id=self.input['actId'])
-        if not activity:
+        try:
+            activity=Activity.objects.get(id=self.input['actId'])
+        except:
             raise LogicError('活动ID错误！')
         try:
             if "ticket" in self.input:
