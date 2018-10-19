@@ -1,4 +1,3 @@
-'''
 from django.test import TestCase
 import json
 from wechat.models import *
@@ -244,4 +243,3 @@ class ticketDetailTest(TestCase):
         Activity.objects.all().delete()
         User.objects.all().delete()
         Ticket.objects.all().delete()
-
