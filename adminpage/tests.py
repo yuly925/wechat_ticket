@@ -778,7 +778,7 @@ class editActivityDetail(TestCase):
                         'bookEnd':activityTemp.book_end.strftime("%Y-%m-%dT%H:%M:%S.000Z"),
                         'picUrl':activityTemp.pic_url, 'status':activityTemp.status,
                         'name':activityTemp.name, 'totalTickets':activityTemp.total_tickets}
-        activityEdited['bookEnd']='2018-9-29T17:01:00.000Z'
+        activityEdited['bookEnd']='2018-09-29T17:01:00.000Z'
         response = self.client.post('/api/a/activity/detail', activityEdited)
         response_json = response.content.decode('utf-8')
         response_obj = json.loads(response_json)
@@ -795,7 +795,7 @@ class editActivityDetail(TestCase):
                         'bookEnd':activityTemp.book_end.strftime("%Y-%m-%dT%H:%M:%S.000Z"),
                         'picUrl':activityTemp.pic_url, 'status':activityTemp.status,
                         'name':activityTemp.name, 'totalTickets':activityTemp.total_tickets}
-        activityEdited['bookEnd']='2018-9-25T17:02:10.000Z'
+        activityEdited['bookEnd']='2018-09-25T17:02:10.000Z'
         response = self.client.post('/api/a/activity/detail', activityEdited)
         response_json = response.content.decode('utf-8')
         response_obj = json.loads(response_json)
