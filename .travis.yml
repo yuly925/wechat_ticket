@@ -14,6 +14,7 @@ before_install:
 - mysql -e 'CREATE DATABASE IF NOT EXISTS wechat_ticket;'
 - mv configs.test.json configs.json
 after_success:
+- sudo apt-get update
 - sudo apt-get install sshpass
 - sudo sshpass -p $PASSWORD sudo ssh ubuntu@123.207.175.24 "cd WeChatTicket; git pull origin master"
 addons:
