@@ -289,12 +289,15 @@ class ActivityMenu(APIView):
         data=[]
         for id in self.input:
             try:
-                activity=Activity.objects.get(id=id)
+                newid=int(id)
+                activity=Activity.objects.get(id=newid)
             except:
                 raise LogicError('没有此项活动！')
             bookStart=int(time.mktime(activity.book_start.astimezone(pytz.timezone('Asia/Shanghai')).timetuple()))
             bookEnd=int(time.mktime(activity.book_end.astimezone(pytz.timezone('Asia/Shanghai')).timetuple()))
             currentTime=int(time.time())
+            if activity.status != 1:
+                raise LogicError('活动未发布')
             if currentTime<=bookStart or currentTime>=bookEnd:
                 raise LogicError('此时不能抢票！')
             data.append(activity)
