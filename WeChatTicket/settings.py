@@ -39,7 +39,7 @@ WECHAT_APPID = CONFIGS['WECHAT_APPID']
 WECHAT_SECRET = CONFIGS['WECHAT_SECRET']
 
 
-ALLOWED_HOSTS = ['7c53390c.ngrok.io','yulinyingdemacbook-pro.local']
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -75,7 +75,7 @@ TEMPLATES = [
         'DIRS': [
             os.path.join(BASE_DIR, 'templates'),
         ],
-        'APP_DIRS': True,
+        'APP_DIRS': False,
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',

@@ -619,6 +619,40 @@ class editActivityDetail(TestCase):
         response_obj = json.loads(response_json)
         self.assertEqual(response_obj['code'], 0)
 
+    def test_editSaved_noTicket(self):
+        self.client.post('/api/a/login', superUserCorrect)
+        activityEdited = {'id':activitySavedSql.id, 'name':'activity_save12d', 'description' :'This i12s a saved activity!',
+                          'startTime' : '2018-12-15T17:02:00.000Z', 'endTime' : '2018-12-30T17:02:00.000Z', 'place' : 'anywWQWhere',
+                          'bookStart' : '2018-11-01T17:02:00.000Z', 'bookEnd' : '2018-12-01T17:02:00.000Z', 'status' : STATUS_PUBLISHED,
+                          'picUrl' :'http://host.net/testSource/3.png', 'totalTickets' : 0}
+        response = self.client.post('/api/a/activity/detail', activityEdited)
+        response_json = response.content.decode('utf-8')
+        response_obj = json.loads(response_json)
+        self.assertEqual(response_obj['code'], 2)
+    
+    def test_editSaved_urlInvalid(self):
+        self.client.post('/api/a/login', superUserCorrect)
+        activityEdited = {'id':activitySavedSql.id, 'name':'activity_save12d', 'description' :'This i12s a saved activity!',
+                          'startTime' : '2018-12-15T17:02:00.000Z', 'endTime' : '2018-12-30T17:02:00.000Z', 'place' : 'anywWQWhere',
+                          'bookStart' : '2018-11-01T17:02:00.000Z', 'bookEnd' : '2018-12-01T17:02:00.000Z', 'status' : STATUS_PUBLISHED,
+                          'picUrl' :'htp://host.net/testSource/3.png', 'totalTickets' : 0}
+        response = self.client.post('/api/a/activity/detail', activityEdited)
+        response_json = response.content.decode('utf-8')
+        response_obj = json.loads(response_json)
+        self.assertEqual(response_obj['code'], 2)
+    
+    def test_editSaved_wrongTimeForm(self):
+        self.client.post('/api/a/login', superUserCorrect)
+        activityEdited = {'id':activitySavedSql.id, 'name':'activity_save12d', 'description' :'This i12s a saved activity!',
+                          'startTime' : '2018-12-15T17:02:00.000Z', 'endTime' : '2018-12-30T17:02:00.000Z', 'place' : 'anywWQWhere',
+                          'bookStart' : '2018-1101T17:02:00.000Z', 'bookEnd' : '2018-12-01T17:02:00.000Z', 'status' : STATUS_PUBLISHED,
+                          'picUrl' :'http://host.net/testSource/3.png', 'totalTickets' : 10}
+        response = self.client.post('/api/a/activity/detail', activityEdited)
+        response_json = response.content.decode('utf-8')
+        response_obj = json.loads(response_json)
+        self.assertEqual(response_obj['code'], 2)
+        
+
     def test_editPublished1(self):
         self.client.post('/api/a/login', superUserCorrect)
         activityTemp = Activity.objects.filter(key='published')[0]
@@ -744,7 +778,7 @@ class editActivityDetail(TestCase):
                         'bookEnd':activityTemp.book_end.strftime("%Y-%m-%dT%H:%M:%S.000Z"),
                         'picUrl':activityTemp.pic_url, 'status':activityTemp.status,
                         'name':activityTemp.name, 'totalTickets':activityTemp.total_tickets}
-        activityEdited['bookEnd']='2018-9-29T17:01:00.000Z'
+        activityEdited['bookEnd']='2018-09-29T17:01:00.000Z'
         response = self.client.post('/api/a/activity/detail', activityEdited)
         response_json = response.content.decode('utf-8')
         response_obj = json.loads(response_json)
@@ -761,7 +795,7 @@ class editActivityDetail(TestCase):
                         'bookEnd':activityTemp.book_end.strftime("%Y-%m-%dT%H:%M:%S.000Z"),
                         'picUrl':activityTemp.pic_url, 'status':activityTemp.status,
                         'name':activityTemp.name, 'totalTickets':activityTemp.total_tickets}
-        activityEdited['bookEnd']='2018-9-25T17:02:10.000Z'
+        activityEdited['bookEnd']='2018-09-25T17:02:10.000Z'
         response = self.client.post('/api/a/activity/detail', activityEdited)
         response_json = response.content.decode('utf-8')
         response_obj = json.loads(response_json)

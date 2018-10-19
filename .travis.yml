@@ -9,10 +9,6 @@ env:
 before_install:
 - mysql -e 'CREATE DATABASE IF NOT EXISTS wechat_ticket;'
 - mv configs.test.json configs.json
-after_success:
-- ssh ubuntu@123.207.175.24 -p $PASSWORD "./deploy.sh"
-addons:
-  ssh_known_hosts: 123.207.175.24
 install:
 - pip install -r requirements.txt
 script:
