@@ -124,7 +124,7 @@ class CreateActivity(APIView):
         if not(int(self.input['status'])==0 or int(self.input['status'])==1):
             raise LogicError('活动状态错误！')
 
-        currentTime=datetime.now().strftime("%Y-%m-%dT%H:%M:%S.000Z")
+        currentTime=datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%S.000Z")
         if self.input['endTime']<=self.input['startTime']:
             raise LogicError('活动结束时间早于活动开始时间！')
         if self.input['bookEnd']<=self.input['bookStart']:
