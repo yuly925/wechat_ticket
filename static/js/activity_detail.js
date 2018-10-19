@@ -13,13 +13,13 @@ function check_percent(p) {
     }
 }
 
-function checktime(){
+function checktime(obj){
     var actstart = new Date($('#input-start-year').val(), $('#input-start-month').val()-1, $('#input-start-day').val(), $('#input-start-hour').val(), $('#input-start-minute').val());
     var actend = new Date($('#input-end-year').val(), $('#input-end-month').val()-1, $('#input-end-day').val(), $('#input-end-hour').val(), $('#input-end-minute').val());
     var bookstart = new Date($('#input-book-start-year').val(), $('#input-book-start-month').val()-1, $('#input-book-start-day').val(), $('#input-book-start-hour').val(), $('#input-book-start-minute').val());
     var bookend = new Date($('#input-book-end-year').val(), $('#input-book-end-month').val()-1, $('#input-book-end-day').val(), $('#input-book-end-hour').val(), $('#input-book-end-minute').val());
     var now = new Date();
-    if(locals.activity.status == 0 || locals.activity.status == 1){
+    if(locals.activity.status == 0 || (locals.activity.status == 1 && obj.isCreate)){
         if(bookstart <= now){
             $('#input-book-start-year').popover({
                     html: true,

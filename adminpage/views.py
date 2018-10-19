@@ -211,8 +211,9 @@ class ActivityDetail(APIView):
         if not self.request.user.is_authenticated():
             raise ValidateError("用户未登录!")
         self.check_input('id','name','place','description','picUrl','startTime','endTime','bookStart','bookEnd','totalTickets','status')
-        activity=Activity.objects.get(id=self.input['id'])
-        if not activity:
+        try:
+            activity=Activity.objects.get(id=self.input['id'])
+        except:
             raise LogicError('此活动不存在！')
 
         endTime=int(time.mktime(activity.end_time.astimezone(pytz.timezone('Asia/Shanghai')).timetuple()))
@@ -230,11 +231,11 @@ class ActivityDetail(APIView):
         pattern=re.match(r'20\d{2}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3,}Z',self.input['bookStart'],re.IGNORECASE)
         if not pattern:
             raise LogicError('订票开始时间错误！')
-        
+
         pattern=re.match(r'20\d{2}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3,}Z',self.input['bookEnd'],re.IGNORECASE)
         if not pattern:
             raise LogicError('订票结束时间错误！')
-        
+
         pattern=re.match(r'20\d{2}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3,}Z',self.input['startTime'],re.IGNORECASE)
         if not pattern:
             raise LogicError('活动开始时间错误！')

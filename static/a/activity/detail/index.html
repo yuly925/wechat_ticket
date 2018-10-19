@@ -378,7 +378,7 @@
                     locals.activity = {};
                 }
                 updateObj(locals.activity, data);
-                if (checktime() && checkname() && checkticket()) {
+                if (checktime(locals) && checkname() && checkticket()) {
                     locals.status = 1;
                     locals.processResult = '';
                     render();
@@ -405,7 +405,7 @@
                     data.id = locals.activity.id;
                 }
                 updateObj(locals.activity, data);
-                if (checktime() && checkname() && checkticket()) {
+                if (checktime(locals) && checkname() && checkticket()) {
                     locals.status = 1;
                     locals.processResult = '';
                     render();
@@ -472,7 +472,7 @@
             data.id = locals.activity.id;
         }
         updateObj(locals.activity, data);
-        if (checktime() && checkname() && checkticket()) {
+        if (checktime(locals) && checkname() && checkticket()) {
             locals.status = 1;
             locals.processResult = '';
             render();
