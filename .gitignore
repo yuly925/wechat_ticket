@@ -68,3 +68,4 @@ target/
 /configs.json
 
 *.DS_Store
+userpage/tests.py
