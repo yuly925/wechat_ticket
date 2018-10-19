@@ -14,7 +14,7 @@ from django.template.loader import get_template
 from WeChatTicket import settings
 from codex.baseview import BaseView
 from wechat.models import User
-
+import ssl
 
 __author__ = "Epsirom"
 
@@ -74,11 +74,19 @@ class WeChatHandler(object):
     def is_text(self, *texts):
         return self.is_msg_type('text') and (self.input['Content'].lower() in texts)
 
+    def is_query(self,*texts):
+        return self.is_msg_type('text') and (texts[0] in self.input['Content'].lower())
+
     def is_event_click(self, *event_keys):
         return self.is_msg_type('event') and (self.input['Event'] == 'CLICK') and (self.input['EventKey'] in event_keys)
 
     def is_event(self, *events):
         return self.is_msg_type('event') and (self.input['Event'] in events)
+
+    def is_event_book(self):
+        return self.is_msg_type('event') and (self.input['Event'] =='CLICK') and (self.input['EventKey'].startswith(
+            self.view.event_keys['book_header']
+        ))
 
     def is_text_command(self, *commands):
         return self.is_msg_type('text') and ((self.input['Content'].split() or [None])[0] in commands)
@@ -88,6 +96,12 @@ class WeChatHandler(object):
 
     def url_bind(self):
         return settings.get_url('u/bind', {'openid': self.user.open_id})
+
+    def url_activity(self,id):
+        return settings.get_url('u/activity',{'id':id})
+
+    def url_ticket(self,ticket):
+        return settings.get_url('u/ticket',{'openid':self.user.open_id,'ticket':ticket})
 
 
 class WeChatEmptyHandler(WeChatHandler):
@@ -132,17 +146,19 @@ class WeChatLib(object):
 
     @classmethod
     def _http_get(cls, url):
+        context = ssl._create_unverified_context()
         req = urllib.request.Request(url=url)
-        res_data = urllib.request.urlopen(req)
+        res_data = urllib.request.urlopen(req,context=context)
         res = res_data.read()
         return res.decode()
 
     @classmethod
     def _http_post(cls, url, data):
+        context = ssl._create_unverified_context()
         req = urllib.request.Request(
             url=url, data=data if isinstance(data, bytes) else data.encode()
         )
-        res_data = urllib.request.urlopen(req)
+        res_data = urllib.request.urlopen(req,context=context)
         res = res_data.read()
         return res.decode()
 
