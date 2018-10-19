@@ -227,6 +227,25 @@ class ActivityDetail(APIView):
         if not pattern:
             raise LogicError('图片url格式错误！')
 
+        pattern=re.match(r'20\d{2}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3,}Z',self.input['bookStart'],re.IGNORECASE)
+        if not pattern:
+            raise LogicError('订票开始时间错误！')
+        
+        pattern=re.match(r'20\d{2}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3,}Z',self.input['bookEnd'],re.IGNORECASE)
+        if not pattern:
+            raise LogicError('订票结束时间错误！')
+        
+        pattern=re.match(r'20\d{2}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3,}Z',self.input['startTime'],re.IGNORECASE)
+        if not pattern:
+            raise LogicError('活动开始时间错误！')
+
+        pattern=re.match(r'20\d{2}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3,}Z',self.input['endTime'],re.IGNORECASE)
+        if not pattern:
+            raise LogicError('活动结束时间错误！')
+
+        if(int(self.input['totalTickets'])==0):
+            raise LogicError('票数至少为1！')
+
         if activity.status==1:
             if activity.name!=self.input['name']:
                 raise LogicError('不能修改活动名称！')
