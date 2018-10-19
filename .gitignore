@@ -67,4 +67,10 @@ target/
 # Custom files
 /configs.json
 
+#uwsgi
+*.ini
+*.pid
+*.log
+
 *.DS_Store
+userpage/tests.py
