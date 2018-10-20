@@ -178,6 +178,8 @@ class BookTicketTextHandler(WeChatHandler):
                                       status=Ticket.STATUS_VALID)
                             tk.save()
                             return self.reply_text('抢票成功')
+                    except:
+                        return self.reply_text("抢票失败")
                 elif existTK[0].status == Ticket.STATUS_VALID:
                     return self.reply_text('您已拥有该活动的票！切忌贪心哦')
                 else:
