@@ -3,6 +3,7 @@
 from wechat.wrapper import WeChatHandler
 from wechat.models import Activity,Ticket,User
 from django.utils import timezone
+from django.db import transaction
 import uuid
 import re,time
 __author__ = "Epsirom"
@@ -145,43 +146,45 @@ class BookTicketTextHandler(WeChatHandler):
                 return self.reply_text('输入有误')
             key = words[0]
 
-            try:
-                ac = Activity.objects.get(key=key,status=Activity.STATUS_PUBLISHED)
-            except Activity.DoesNotExist:
-                return self.reply_text('对不起！没有查找到发布的活动')
+            with transaction.atomic():
+                try:
+                    ac = Activity.objects.get(key=key,status=Activity.STATUS_PUBLISHED)
+                except Activity.DoesNotExist:
+                    return self.reply_text('对不起！没有查找到发布的活动')
 
-            # 判断是否可以抢票
-            startTime = int(time.mktime(ac.book_start.timetuple())) + 28800
-            endTime = int(time.mktime(ac.book_end.timetuple())) + 28800
-            currentTime = int(time.time())
-            if startTime > currentTime:
-                return self.reply_text('抢票未开始')
-            elif endTime < currentTime:
-                return self.reply_text('抢票已结束，下次请谨记时间哦')
+                # 判断是否可以抢票
+                startTime = int(time.mktime(ac.book_start.timetuple())) + 28800
+                endTime = int(time.mktime(ac.book_end.timetuple())) + 28800
+                currentTime = int(time.time())
+                if startTime > currentTime:
+                    return self.reply_text('抢票未开始')
+                elif endTime < currentTime:
+                    return self.reply_text('抢票已结束，下次请谨记时间哦')
 
-            if ac.remain_tickets <=0:
-                return self.reply_text('抢票已抢光QAQ')
-            else:
-                #先判断是否已有票
-                existTK=Ticket.objects.filter(activity=ac,student_id=self.user.student_id)
-                if not existTK:
-                    ac.remain_tickets-=1
-                    ac.save()
-                    uniId=str(uuid.uuid4())+self.user.open_id
-                    tk=Ticket(student_id=self.user.student_id,
-                              unique_id=uniId,
-                              activity=ac,
-                              status=Ticket.STATUS_VALID)
-                    tk.save()
-                    return self.reply_text('抢票成功')
-                elif existTK[0].status == Ticket.STATUS_VALID:
-                    return self.reply_text('您已拥有该活动的票！切忌贪心哦')
+                if ac.remain_tickets <=0:
+                    return self.reply_text('抢票已抢光QAQ')
                 else:
-                    ac.remain_tickets -= 1
-                    ac.save()
-                    existTK[0].status=Ticket.STATUS_VALID
-                    existTK[0].save()
-                    return self.reply_text('抢票成功')
+                    #先判断是否已有票
+                    existTK=Ticket.objects.filter(activity=ac,student_id=self.user.student_id)
+                    if not existTK:
+
+                        ac.remain_tickets-=1
+                        ac.save()
+                        uniId=str(uuid.uuid4())+self.user.open_id
+                        tk=Ticket(student_id=self.user.student_id,
+                                  unique_id=uniId,
+                                  activity=ac,
+                                  status=Ticket.STATUS_VALID)
+                        tk.save()
+                        return self.reply_text('抢票成功')
+                    elif existTK[0].status == Ticket.STATUS_VALID:
+                        return self.reply_text('您已拥有该活动的票！切忌贪心哦')
+                    else:
+                        ac.remain_tickets -= 1
+                        ac.save()
+                        existTK[0].status=Ticket.STATUS_VALID
+                        existTK[0].save()
+                        return self.reply_text('抢票成功')
 
 #点击"查票"按钮，返回该用户所有票（VALID、CANCELLED、UESED）的图文链接列表
 class GetTicketHandler(WeChatHandler):
@@ -236,41 +239,42 @@ class BookTicketHandler(WeChatHandler):
             return self.reply_text(self.get_message('bind_account'))
         #已绑定
         else:
-            id=self.input['EventKey'][len(self.view.event_keys['book_header']):]
-            ac=Activity.objects.get(id=id)
-            ###删除或保存的活动是否可以出现在抢票按钮？
-            if ac.status == Activity.STATUS_DELETED:
-                return self.reply_text('活动已删除')
+            with transaction.atomic():
+                id=self.input['EventKey'][len(self.view.event_keys['book_header']):]
+                ac=Activity.objects.get(id=id)
+                ###删除或保存的活动是否可以出现在抢票按钮？
+                if ac.status == Activity.STATUS_DELETED:
+                    return self.reply_text('活动已删除')
 
-            #判断是否可以抢票
-            startTime =int(time.mktime(ac.book_start.timetuple())) + 28800
-            endTime=int(time.mktime(ac.book_end.timetuple())) + 28800
-            currentTime=int(time.time())
-            if startTime > currentTime:
-                return self.reply_text('抢票未开始')
-            elif endTime <currentTime:
-                return self.reply_text('抢票已结束，下次请谨记时间哦')
+                #判断是否可以抢票
+                startTime =int(time.mktime(ac.book_start.timetuple())) + 28800
+                endTime=int(time.mktime(ac.book_end.timetuple())) + 28800
+                currentTime=int(time.time())
+                if startTime > currentTime:
+                    return self.reply_text('抢票未开始')
+                elif endTime <currentTime:
+                    return self.reply_text('抢票已结束，下次请谨记时间哦')
 
-            if ac.remain_tickets <= 0:
-                return self.reply_text('抢票已抢光QAQ')
-            else:
-                # 先判断是否已有票
-                existTK = Ticket.objects.filter(activity=ac, student_id=self.user.student_id)
-                if not existTK:
-                    ac.remain_tickets -= 1
-                    ac.save()
-                    uniId = str(uuid.uuid4()) + self.user.open_id
-                    tk = Ticket(student_id=self.user.student_id,
-                                unique_id=uniId,
-                                activity=ac,
-                                status=Ticket.STATUS_VALID)
-                    tk.save()
-                    return self.reply_text('抢票成功')
-                elif existTK[0].status == Ticket.STATUS_VALID:
-                    return self.reply_text('您已拥有该活动的票！切忌贪心哦')
+                if ac.remain_tickets <= 0:
+                    return self.reply_text('抢票已抢光QAQ')
                 else:
-                    ac.remain_tickets -= 1
-                    ac.save()
-                    existTK[0].status = Ticket.STATUS_VALID
-                    existTK[0].save()
-                    return self.reply_text('抢票成功')
+                    # 先判断是否已有票
+                    existTK = Ticket.objects.filter(activity=ac, student_id=self.user.student_id)
+                    if not existTK:
+                        ac.remain_tickets -= 1
+                        ac.save()
+                        uniId = str(uuid.uuid4()) + self.user.open_id
+                        tk = Ticket(student_id=self.user.student_id,
+                                    unique_id=uniId,
+                                    activity=ac,
+                                    status=Ticket.STATUS_VALID)
+                        tk.save()
+                        return self.reply_text('抢票成功')
+                    elif existTK[0].status == Ticket.STATUS_VALID:
+                        return self.reply_text('您已拥有该活动的票！切忌贪心哦')
+                    else:
+                        ac.remain_tickets -= 1
+                        ac.save()
+                        existTK[0].status = Ticket.STATUS_VALID
+                        existTK[0].save()
+                        return self.reply_text('抢票成功')
