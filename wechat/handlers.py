@@ -201,7 +201,7 @@ class GetTicketHandler(WeChatHandler):
         else:
             return self.reply_news([{'Title': tk.activity.name, 'Description': tk.activity.description,
                                      'PicUrl':tk.activity.pic_url,'Url':self.url_ticket(tk.unique_id)
-                                     } for tk in Tickets[:10]])
+                                     } for tk in Tickets[:8]])
 
 
 #点击"抢啥"按钮，返回最多十个正在抢票的活动，按结束时间排序
@@ -216,7 +216,7 @@ class BookWhatHandler(WeChatHandler):
         #已绑定
         Activities=Activity.objects.filter(
             status=Activity.STATUS_PUBLISHED, book_end__gt=timezone.now()
-        ).order_by('book_end')[ :10]
+        ).order_by('book_end')[ :8]
 
         if len(Activities):
             return self.reply_news([{'Title': act.name, 'Description': act.description,
