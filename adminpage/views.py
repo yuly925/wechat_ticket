@@ -287,6 +287,25 @@ class ActivityMenu(APIView):
         activity_list=Activity.objects.all()
         num=1
         data=[]
+        old_id=[]
+
+        #获取微信菜单
+        menu=CustomWeChatView.get_book_btn()
+        for item in menu['sub_button']:
+            id=int(item['key'][17:])
+            try:
+                temp_activity=Activity.objects.get(id=id)
+            except:
+                raise LogicError('读取活动菜单出错！')
+            old_id.append(id)
+            temp={
+                'id':temp_activity.id,
+                'name':temp_activity.name,
+                'menuIndex':num
+            }
+            num=num+1
+            data.append(temp)
+
         for item in activity_list:
             bookStart=int(time.mktime(item.book_start.astimezone(pytz.timezone('Asia/Shanghai')).timetuple()))
             bookEnd=int(time.mktime(item.book_end.astimezone(pytz.timezone('Asia/Shanghai')).timetuple()))
@@ -297,10 +316,10 @@ class ActivityMenu(APIView):
                 temp={
                 'id':item.id,
                 'name':item.name,
-                'menuIndex':num
+                'menuIndex':0
                 }
-                num=num+1
-                data.append(temp)
+                if item.id not in old_id:
+                    data.append(temp)
         return data
 
     def post(self):

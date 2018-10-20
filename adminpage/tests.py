@@ -4,6 +4,7 @@
 from django.test import TestCase
 from django.contrib.auth.models import User
 from wechat.models import *
+from wechat.views import CustomWeChatView
 from adminpage.views import *
 import json
 import time, datetime
@@ -208,51 +209,51 @@ activityPublishedNoTicket = {'name':'activity_published_no_ticket', 'key':'publi
 
 
 activitySavedSql = Activity(name ='activity_saved', key = 'saved', description = 'This is a saved activity!',place='anywhere',
-                            start_time = (datetime.datetime.utcnow()+datetime.timedelta(days=20)).strftime("%Y-%m-%dT%H:%M:00.000Z"), 
+                            start_time = (datetime.datetime.utcnow()+datetime.timedelta(days=20)).strftime("%Y-%m-%dT%H:%M:00.000Z"),
                             end_time = (datetime.datetime.utcnow()+datetime.timedelta(days=30)).strftime("%Y-%m-%dT%H:%M:00.000Z"),
-                            book_start = (datetime.datetime.utcnow()+datetime.timedelta(days=5)).strftime("%Y-%m-%dT%H:%M:00.000Z"), 
+                            book_start = (datetime.datetime.utcnow()+datetime.timedelta(days=5)).strftime("%Y-%m-%dT%H:%M:00.000Z"),
                             book_end = (datetime.datetime.utcnow()+datetime.timedelta(days=10)).strftime("%Y-%m-%dT%H:%M:00.000Z"),
                             status= 0, pic_url='http://host.net/testSource/1.png', total_tickets = 10, remain_tickets = 10)
 
 activityPublishedSql = Activity(name ='activity_published', key = 'published', description = 'This is a published activity!',place='anywhere',
-                                start_time = (datetime.datetime.utcnow()+datetime.timedelta(days=20)).strftime("%Y-%m-%dT%H:%M:00.000Z"), 
+                                start_time = (datetime.datetime.utcnow()+datetime.timedelta(days=20)).strftime("%Y-%m-%dT%H:%M:00.000Z"),
                                 end_time = (datetime.datetime.utcnow()+datetime.timedelta(days=30)).strftime("%Y-%m-%dT%H:%M:00.000Z"),
-                                book_start = (datetime.datetime.utcnow()+datetime.timedelta(days=5)).strftime("%Y-%m-%dT%H:%M:00.000Z"), 
+                                book_start = (datetime.datetime.utcnow()+datetime.timedelta(days=5)).strftime("%Y-%m-%dT%H:%M:00.000Z"),
                                 book_end = (datetime.datetime.utcnow()+datetime.timedelta(days=10)).strftime("%Y-%m-%dT%H:%M:00.000Z"),
                                 status= STATUS_PUBLISHED, pic_url='http://host.net/testSource/1.png', total_tickets = 10, remain_tickets = 10)
 
 activityDeletedSql = Activity(name ='activity_deleted', key = 'deleted', description = 'This is a deleted activity!',place = 'anywhere',
-                            start_time = (datetime.datetime.utcnow()+datetime.timedelta(days=20)).strftime("%Y-%m-%dT%H:%M:00.000Z"), 
+                            start_time = (datetime.datetime.utcnow()+datetime.timedelta(days=20)).strftime("%Y-%m-%dT%H:%M:00.000Z"),
                             end_time = (datetime.datetime.utcnow()+datetime.timedelta(days=30)).strftime("%Y-%m-%dT%H:%M:00.000Z"),
-                            book_start = (datetime.datetime.utcnow()-datetime.timedelta(days=10)).strftime("%Y-%m-%dT%H:%M:00.000Z"), 
+                            book_start = (datetime.datetime.utcnow()-datetime.timedelta(days=10)).strftime("%Y-%m-%dT%H:%M:00.000Z"),
                             book_end = (datetime.datetime.utcnow()+datetime.timedelta(days=10)).strftime("%Y-%m-%dT%H:%M:00.000Z"),
                             status= STATUS_DELETED, pic_url='http://host.net/testSource/1.png', total_tickets = 10, remain_tickets = 10)
 
 activityTicketingSql = Activity(name ='activity_published1', key = 'published1', description = 'This is a published activity!',place='anywhere',
-                                start_time = (datetime.datetime.utcnow()+datetime.timedelta(days=20)).strftime("%Y-%m-%dT%H:%M:00.000Z"), 
+                                start_time = (datetime.datetime.utcnow()+datetime.timedelta(days=20)).strftime("%Y-%m-%dT%H:%M:00.000Z"),
                                 end_time = (datetime.datetime.utcnow()+datetime.timedelta(days=30)).strftime("%Y-%m-%dT%H:%M:00.000Z"),
-                                book_start = (datetime.datetime.utcnow()-datetime.timedelta(days=10)).strftime("%Y-%m-%dT%H:%M:00.000Z"), 
+                                book_start = (datetime.datetime.utcnow()-datetime.timedelta(days=10)).strftime("%Y-%m-%dT%H:%M:00.000Z"),
                                 book_end = (datetime.datetime.utcnow()+datetime.timedelta(days=10)).strftime("%Y-%m-%dT%H:%M:00.000Z"),
                                 status= STATUS_PUBLISHED, pic_url='http://host.net/testSource/1.png', total_tickets = 10, remain_tickets = 10)
 
 activityTicketedSql = Activity(name ='activity_published2', key = 'published2', description = 'This is a published activity!', place = 'anywhere',
-                                start_time = (datetime.datetime.utcnow()+datetime.timedelta(days=20)).strftime("%Y-%m-%dT%H:%M:00.000Z"), 
+                                start_time = (datetime.datetime.utcnow()+datetime.timedelta(days=20)).strftime("%Y-%m-%dT%H:%M:00.000Z"),
                                 end_time = (datetime.datetime.utcnow()+datetime.timedelta(days=30)).strftime("%Y-%m-%dT%H:%M:00.000Z"),
-                                book_start = (datetime.datetime.utcnow()-datetime.timedelta(days=20)).strftime("%Y-%m-%dT%H:%M:00.000Z"), 
+                                book_start = (datetime.datetime.utcnow()-datetime.timedelta(days=20)).strftime("%Y-%m-%dT%H:%M:00.000Z"),
                                 book_end = (datetime.datetime.utcnow()-datetime.timedelta(days=10)).strftime("%Y-%m-%dT%H:%M:00.000Z"),
                                 status= STATUS_PUBLISHED, pic_url='http://host.net/testSource/1.png', total_tickets = 10, remain_tickets = 10)
 
 activityActingSql = Activity(name ='activity_published3', key = 'published3', description = 'This is a published activity!', place = 'anywhere',
-                                start_time = (datetime.datetime.utcnow()-datetime.timedelta(days=10)).strftime("%Y-%m-%dT%H:%M:00.000Z"), 
+                                start_time = (datetime.datetime.utcnow()-datetime.timedelta(days=10)).strftime("%Y-%m-%dT%H:%M:00.000Z"),
                                 end_time = (datetime.datetime.utcnow()+datetime.timedelta(days=10)).strftime("%Y-%m-%dT%H:%M:00.000Z"),
-                                book_start = (datetime.datetime.utcnow()-datetime.timedelta(days=30)).strftime("%Y-%m-%dT%H:%M:00.000Z"), 
+                                book_start = (datetime.datetime.utcnow()-datetime.timedelta(days=30)).strftime("%Y-%m-%dT%H:%M:00.000Z"),
                                 book_end = (datetime.datetime.utcnow()-datetime.timedelta(days=20)).strftime("%Y-%m-%dT%H:%M:00.000Z"),
                                 status= STATUS_PUBLISHED, pic_url='http://host.net/testSource/1.png', total_tickets = 10, remain_tickets = 10)
 
 activityActedSql = Activity(name ='activity_published4', key = 'published4', description = 'This is a published activity!',place='anywhere',
-                                start_time = (datetime.datetime.utcnow()-datetime.timedelta(days=10)).strftime("%Y-%m-%dT%H:%M:00.000Z"), 
+                                start_time = (datetime.datetime.utcnow()-datetime.timedelta(days=10)).strftime("%Y-%m-%dT%H:%M:00.000Z"),
                                 end_time = (datetime.datetime.utcnow()-datetime.timedelta(days=5)).strftime("%Y-%m-%dT%H:%M:00.000Z"),
-                                book_start = (datetime.datetime.utcnow()-datetime.timedelta(days=30)).strftime("%Y-%m-%dT%H:%M:00.000Z"), 
+                                book_start = (datetime.datetime.utcnow()-datetime.timedelta(days=30)).strftime("%Y-%m-%dT%H:%M:00.000Z"),
                                 book_end = (datetime.datetime.utcnow()-datetime.timedelta(days=20)).strftime("%Y-%m-%dT%H:%M:00.000Z"),
                                 status= STATUS_PUBLISHED, pic_url='http://host.net/testSource/1.png', total_tickets = 10, remain_tickets = 10)
 
@@ -629,7 +630,7 @@ class editActivityDetail(TestCase):
         response_json = response.content.decode('utf-8')
         response_obj = json.loads(response_json)
         self.assertEqual(response_obj['code'], 2)
-    
+
     def test_editSaved_urlInvalid(self):
         self.client.post('/api/a/login', superUserCorrect)
         activityEdited = {'id':activitySavedSql.id, 'name':'activity_save12d', 'description' :'This i12s a saved activity!',
@@ -640,7 +641,7 @@ class editActivityDetail(TestCase):
         response_json = response.content.decode('utf-8')
         response_obj = json.loads(response_json)
         self.assertEqual(response_obj['code'], 2)
-    
+
     def test_editSaved_wrongTimeForm(self):
         self.client.post('/api/a/login', superUserCorrect)
         activityEdited = {'id':activitySavedSql.id, 'name':'activity_save12d', 'description' :'This i12s a saved activity!',
@@ -651,7 +652,7 @@ class editActivityDetail(TestCase):
         response_json = response.content.decode('utf-8')
         response_obj = json.loads(response_json)
         self.assertEqual(response_obj['code'], 2)
-        
+
 
     def test_editPublished1(self):
         self.client.post('/api/a/login', superUserCorrect)
@@ -904,6 +905,7 @@ class getActivityMenu(TestCase):
         self.assertEqual(response_obj['code'], 3)
 
     def test_success(self):
+        CustomWeChatView.update_menu([])
         self.client.post('/api/a/login', superUserCorrect)
         response = self.client.get('/api/a/activity/menu')
         response_json = response.content.decode('utf-8')
@@ -960,7 +962,7 @@ class adjustActivityMenu(TestCase):
         response = self.client.post('/api/a/activity/menu', {activityTicketingSql.id:activityTicketingSql.id})
         response_json = response.content.decode('utf-8')
         response_obj = json.loads(response_json)
-        self.assertEqual(response_obj['code'], 0)
+        self.assertEqual(response_obj['code'], -1)
 
     def test_addPublishedAfterTicket(self):
         self.client.post('/api/a/login', superUserCorrect)
@@ -975,7 +977,7 @@ class adjustActivityMenu(TestCase):
         response_json = response.content.decode('utf-8')
         response_obj = json.loads(response_json)
         self.assertEqual(response_obj['code'], 2)
-    
+
     def tearDown(self):
         Activity.objects.all().delete()
 
