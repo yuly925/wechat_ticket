@@ -225,7 +225,7 @@ class ticketDetailTest(TestCase):
 
     def test_queryUsedTickets(self):
         bookTicketFrom(self.client, activityBookingRepeatedlySql)  # 先抢票
-        unique_id = getTicketUniqueId(validUser.student_id,activityBookingAvailableSql)# 获取电子票的unique_id
+        unique_id = getTicketUniqueId(validUser.student_id,activityBookingRepeatedlySql)# 获取电子票的unique_id
         check_tickets_data={
             "actId":activityBookingRepeatedlySql.id,
             "ticket":unique_id,
