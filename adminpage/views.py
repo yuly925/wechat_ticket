@@ -318,7 +318,7 @@ class ActivityMenu(APIView):
                 'name':item.name,
                 'menuIndex':0
                 }
-                if id not in old_id:
+                if item.id not in old_id:
                     data.append(temp)
         return data
 
