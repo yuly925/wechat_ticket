@@ -2,7 +2,6 @@ from django.test import TestCase
 import json
 from wechat.models import *
 from django.contrib import auth
-#from userpage.views import *
 # Create your tests here.
 
 STATUS_DELETED = -1
