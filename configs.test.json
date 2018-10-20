@@ -2,13 +2,13 @@
   "SECRET_KEY": "ThisIsARandomStringWithLength=50!-----------------",
   "DEBUG": true,
   "IGNORE_WECHAT_SIGNATURE": true,
-  "WECHAT_TOKEN": "token123456789",
-  "WECHAT_APPID": "wxb532d714aca4da11",
-  "WECHAT_SECRET": "be89aeb944f848d90a04abca4e6ac9d9",
+  "WECHAT_TOKEN": "token",
+  "WECHAT_APPID": "",
+  "WECHAT_SECRET": "",
   "DB_NAME": "wechat_ticket",
   "DB_USER": "root",
   "DB_PASS": "",
   "DB_HOST": "127.0.0.1",
   "DB_PORT": "3306",
-  "SITE_DOMAIN": "2e2343x841.imwork.net"
+  "SITE_DOMAIN": ""
 }
