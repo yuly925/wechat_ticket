@@ -962,7 +962,7 @@ class adjustActivityMenu(TestCase):
         response = self.client.post('/api/a/activity/menu', {activityTicketingSql.id:activityTicketingSql.id})
         response_json = response.content.decode('utf-8')
         response_obj = json.loads(response_json)
-        self.assertEqual(response_obj['code'], 0)
+        self.assertEqual(response_obj['code'], -1)
 
     def test_addPublishedAfterTicket(self):
         self.client.post('/api/a/login', superUserCorrect)
