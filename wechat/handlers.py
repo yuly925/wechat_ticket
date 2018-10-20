@@ -168,6 +168,7 @@ class BookTicketTextHandler(WeChatHandler):
                 if not existTK:
                     try:
                         with transaction.atomic():
+                            ac = Activity.objects.select_for_update().get(key=key, status=Activity.STATUS_PUBLISHED)
                             ac.remain_tickets-=1
                             ac.save()
                             uniId=str(uuid.uuid4())+self.user.open_id
@@ -177,13 +178,12 @@ class BookTicketTextHandler(WeChatHandler):
                                       status=Ticket.STATUS_VALID)
                             tk.save()
                             return self.reply_text('抢票成功')
-                    except:
-                        return self.reply_text("抢票失败")
                 elif existTK[0].status == Ticket.STATUS_VALID:
                     return self.reply_text('您已拥有该活动的票！切忌贪心哦')
                 else:
                     try:
                         with transaction.atomic():
+                            ac = Activity.objects.select_for_update().get(key=key, status=Activity.STATUS_PUBLISHED)
                             ac.remain_tickets -= 1
                             ac.save()
                             existTK[0].status=Ticket.STATUS_VALID
