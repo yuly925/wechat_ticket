@@ -7,12 +7,11 @@ services:
 env:
 - DJANGO_VERSION = 1.9.5, DB = mysql
 before_install:
+- openssl aes-256-cbc -K $encrypted_d2dce55bfc52_key -iv $encrypted_d2dce55bfc52_iv
+  -in configs.test.json.enc -out configs.test.json -d
 - mysql -e 'CREATE DATABASE IF NOT EXISTS wechat_ticket;'
 - mv configs.test.json configs.json
 install:
 - pip install -r requirements.txt
 script:
 - python manage.py test
-dd:
-- openssl aes-256-cbc -K $encrypted_d2dce55bfc52_key -iv $encrypted_d2dce55bfc52_iv
-  -in configs.test.json.enc -out configs.test.json -d
