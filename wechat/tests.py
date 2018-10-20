@@ -77,6 +77,10 @@ def cancelTicketFrom(client, activitySql):
     response = client.post(url, reqBody, content_type='text/xml')
     return response.context
 
+def getTicketUniqueId(studentId, activitySql):
+    '''获取电子票的id'''
+    return Ticket.objects.get(student_id=studentId,activity=activitySql).unique_id
+
 
 class bookingTicketsTest(TestCase):
 
@@ -170,8 +174,7 @@ class cancelTicketsTest(TestCase):
     def test_cancelUsedTickets(self): #退掉已经使用过的票
         remainTickets = activityBookingAvailableSql.remain_tickets
         bookTicketFrom(self.client, activityBookingAvailableSql)  # 先抢票
-        unique_id = Ticket.objects.get(student_id=validUser.student_id,
-                                       activity=activityBookingAvailableSql).unique_id  # 获取电子票的unique_id
+        unique_id = getTicketUniqueId(validUser.student_id,activityBookingAvailableSql)# 获取电子票的unique_id
         check_tickets_data = {
             "actId": activityBookingAvailableSql.id,
             "ticket": unique_id,
@@ -207,14 +210,14 @@ class ticketDetailTest(TestCase):
     def test_queryInvalidTicket(self):
         bookTicketFrom(self.client, activityBookingAvailableSql)#先抢票
         cancelTicketFrom(self.client, activityBookingAvailableSql)#然后退票
-        unique_id=Ticket.objects.get(student_id=validUser.student_id, activity=activityBookingAvailableSql).unique_id #获取电子票的unique_id
+        unique_id = getTicketUniqueId(validUser.student_id,activityBookingAvailableSql)# 获取电子票的unique_id
         query_data={"openid":validUser.open_id, "ticket":unique_id}
         response_object = get_response_object(self.client.get("/api/u/ticket/detail", query_data))
         self.assertEqual(response_object['data']['status'], 0)
 
     def test_queryValidTickets(self):
         bookTicketFrom(self.client, activityBookingAvailableSql)  # 先抢票
-        unique_id=Ticket.objects.get(student_id=validUser.student_id, activity=activityBookingAvailableSql).unique_id #获取电子票的unique_id
+        unique_id = getTicketUniqueId(validUser.student_id,activityBookingAvailableSql)# 获取电子票的unique_id
         query_data = {"openid": validUser.open_id, "ticket": unique_id}
         response_object = get_response_object(self.client.get("/api/u/ticket/detail", query_data))
         self.assertEqual(response_object['data']['status'], 1)
@@ -222,7 +225,7 @@ class ticketDetailTest(TestCase):
 
     def test_queryUsedTickets(self):
         bookTicketFrom(self.client, activityBookingRepeatedlySql)  # 先抢票
-        unique_id=Ticket.objects.get(student_id=validUser.student_id, activity=activityBookingRepeatedlySql).unique_id #获取电子票的unique_id
+        unique_id = getTicketUniqueId(validUser.student_id,activityBookingAvailableSql)# 获取电子票的unique_id
         check_tickets_data={
             "actId":activityBookingRepeatedlySql.id,
             "ticket":unique_id,
