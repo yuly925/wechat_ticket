@@ -278,6 +278,10 @@ class ActivityDetail(APIView):
         activity.book_end=self.input['bookEnd']
         activity.total_tickets=self.input['totalTickets']
         activity.status=self.input['status']
+        remain_tickets=int(self.input['totalTickets'])-len(Ticket.objects.filter(activity=activity))
+        if remain_tickets<0:
+            remain_tickets=0
+        activity.remain_tickets=remain_tickets
         activity.save()
 
 class ActivityMenu(APIView):
